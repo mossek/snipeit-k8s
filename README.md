@@ -3,7 +3,10 @@
 A containerized deployment of [Snipe-IT](https://snipeitapp.com/) (open-source IT asset management), backed by MariaDB and a dedicated Redis instance for cache/session/queue.
 
 These manifests are written for a **local/on-prem Kubernetes cluster** (bare-metal nodes, Calico CNI, no cloud load balancer). If you're deploying to **AKS** instead, see the callout notes under each file below — the changes are small and isolated to storage and networking.
+## Screenshoots
 
+! [Sniepit-IT Dashboard] (images/snipeitdashboard.png)
+! [Login Page] (images/loginpage.png)
 ## Files
 
 | File | Purpose |
