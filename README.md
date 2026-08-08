@@ -4,9 +4,9 @@ A containerized deployment of [Snipe-IT](https://snipeitapp.com/) (open-source I
 
 These manifests are written for a **local/on-prem Kubernetes cluster** (bare-metal nodes, Calico CNI, no cloud load balancer). If you're deploying to **AKS** instead, see the callout notes under each file below — the changes are small and isolated to storage and networking.
 ## Screenshoots
-
-![Sniepit-IT Dashboard](images/snipeitdashboard.png)
+![Kubernete cluster](images/K8s-Cluster.png)
 ![Login Page](images/loginpage.png)
+![Sniepit-IT Dashboard](images/snipeitdashboard.png)
 ## Files
 
 | File | Purpose |
