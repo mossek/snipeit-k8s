@@ -1,0 +1,29 @@
+# =============================================================================
+# File: mariadb-pvc.yaml
+#
+# Purpose:
+# Creates persistent storage for the MariaDB database.
+#
+# Notes:
+# - Local Kubernetes uses the "local-path" StorageClass.
+# - Azure Kubernetes Service (AKS) uses "managed-csi".
+#
+# Database files are stored in this volume and survive pod restarts.
+#
+# Deployment:
+# kubectl apply -f mariadb-pvc.yaml
+# ============================================================================
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mariadb-pvc
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+
+  resources:
+    requests:
+      storage: 5Gi
+
+  storageClassName: local-storage

@@ -1,0 +1,87 @@
+
+# =============================================================================
+# File: mariadb-deployment.yaml
+#
+# Purpose:
+# Deploys the MariaDB database used by the Snipe-IT application.
+#
+# This deployment:
+# - Pulls the MariaDB image from GitHub Container Registry (GHCR)
+# - Loads database credentials from the Kubernetes Secret "mariadb-secret"
+# - Mounts persistent storage using the PVC "mariadb-pvc"
+# - Exposes port 3306 inside the cluster
+#
+# Dependencies:
+# - mariadb-secret
+# - mariadb-pvc
+# - ghcr-secret
+# Deployment:
+# kubectl apply -f mariadb-deployment.yaml
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+  namespace: default
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: mariadb
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: mariadb
+    spec:
+      containers:
+      - envFrom:
+        - secretRef:
+            name: mariadb-secret
+        image: ghcr.io/mossek/mymariadb:latest
+        imagePullPolicy: Always
+        name: mariadb
+        ports:
+        - containerPort: 3306
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: mariadb-storage
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: mariadb-storage
+        persistentVolumeClaim:
+          claimName: mariadb-pvc
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2026-08-02T20:34:15Z"
+    lastUpdateTime: "2026-08-02T20:35:05Z"
+    message: ReplicaSet "mariadb-7bd898cf47" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2026-08-03T15:07:25Z"
+    lastUpdateTime: "2026-08-03T15:07:25Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  observedGeneration: 5
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

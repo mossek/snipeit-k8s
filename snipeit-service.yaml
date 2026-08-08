@@ -1,0 +1,33 @@
+
+# =============================================================================
+# File: snipeit-service.yaml
+#
+# Purpose:
+# Exposes the Snipe-IT application inside (or outside) the cluster.
+#
+# Current configuration:
+# Use - NodePort if you are running this on local kubernete cluster
+# User - LoadBalander if you are running in a cloud kubernete cluster eg AKS
+# For Azure Kubernetes Service this may later become:
+# - LoadBalancer
+# - Ingress
+#
+# Deployment:
+# kubectl apply -f snipeit-service.yaml
+# =============================================================================
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: snipeit-nginx
+
+spec:
+  selector:
+    app: snipeit-nginx
+
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
+  type: NodePort

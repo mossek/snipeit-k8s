@@ -1,0 +1,30 @@
+# =============================================================================
+# File: mariadb-service.yaml
+#
+# Purpose:
+# Creates an internal ClusterIP service for MariaDB.
+#
+# This service allows Snipe-IT to connect to MariaDB using:
+#
+#     Host: mariadb
+#     Port: 3306
+#
+# This service is NOT exposed outside the Kubernetes cluster.
+#
+# Deployment:
+# kubectl apply -f mariadb-service.yaml
+# =============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb
+  namespace: default
+spec:
+  ports:
+  - port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    app: mariadb
+  sessionAffinity: None
+  type: ClusterIP

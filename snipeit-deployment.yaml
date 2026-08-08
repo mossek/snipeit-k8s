@@ -1,0 +1,88 @@
+# =============================================================================
+# File: snipeit-deployment.yaml
+#
+# Purpose:
+# Deploys the Snipe-IT web application.
+#
+# This deployment:
+# - Pulls the Snipe-IT container image
+# - Reads APP_KEY from "snipeit-secret" and DB_PASSWORD from "mariadb-secret"
+# - Connects to the MariaDB service
+# - Connects to the dedicated snipeit-redis service for cache/session/queue
+# - Exposes HTTP on port 80 (via NodePort snipeit-nginx service)
+#
+# Dependencies:
+# - mariadb-service
+# - snipeit-redis-service
+# - snipeit-secret   (must contain key: APP_KEY)
+# - mariadb-secret    (must contain key: MYSQL_PASSWORD)
+#
+# Deployment:
+# kubectl apply -f snipeit-deployment.yaml
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snipeit-nginx
+  namespace: default
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: snipeit-nginx
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: snipeit-nginx
+    spec:
+      containers:
+      - name: nginx
+        image: ghcr.io/mossek/snipeit:latest
+        imagePullPolicy: Always
+        env:
+        - name: DB_HOST
+          value: mariadb
+        - name: DB_DATABASE
+          value: snipeit_db
+        - name: DB_USERNAME
+          value: mossek
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: MYSQL_PASSWORD
+              name: mariadb-secret
+        - name: APP_KEY
+          valueFrom:
+            secretKeyRef:
+              key: APP_KEY
+              name: snipeit-secret
+        - name: APP_URL
+          value: "http://192.168.0.110:32098"
+        - name: REDIS_HOST
+          value: snipeit-redis
+        - name: REDIS_PORT
+          value: "6379"
+        - name: CACHE_DRIVER
+          value: redis
+        - name: SESSION_DRIVER
+          value: redis
+        - name: QUEUE_CONNECTION
+          value: redis
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snipeit-redis
+  labels:
+    app: snipeit-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: snipeit-redis
+  template:
+    metadata:
+      labels:
+        app: snipeit-redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:7-alpine
+        ports:
+        - containerPort: 6379
+          protocol: TCP
+        resources: {}
