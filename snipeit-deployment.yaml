@@ -65,7 +65,7 @@ spec:
               key: APP_KEY
               name: snipeit-secret
         - name: APP_URL
-          value: "http://192.168.0.110:32098"
+          value "http://192.168.0.110:32098"
         - name: REDIS_HOST
           value: snipeit-redis
         - name: REDIS_PORT
