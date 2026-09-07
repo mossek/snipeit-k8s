@@ -41,6 +41,7 @@ spec:
     metadata:
       labels:
         app: snipeit-nginx
+        deployed-by: jenkins-pipeline
     spec:
       containers:
       - name: nginx
