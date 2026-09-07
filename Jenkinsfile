@@ -9,6 +9,11 @@ pipeline {
                 checkout scm
             }
         }
+        stage('Validate') {
+            steps {
+                sh 'KUBECONFIG=/var/jenkins_home/kubeconfig /var/jenkins_home/bin/kubectl apply --dry-run=client -f snipeit-deployment.yaml'
+            }
+        }
         stage('Deploy') {
             steps {
                 sh 'KUBECONFIG=/var/jenkins_home/kubeconfig /var/jenkins_home/bin/kubectl apply -f snipeit-deployment.yaml'
