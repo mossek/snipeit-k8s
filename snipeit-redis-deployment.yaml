@@ -5,7 +5,7 @@ metadata:
   labels:
     app: snipeit-redis
 spec:
-  replicas: 1
+  replicas: 10
   selector:
     matchLabels:
       app: snipeit-redis
