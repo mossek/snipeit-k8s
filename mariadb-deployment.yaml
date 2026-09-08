@@ -22,7 +22,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mariadb
-  namespace: Default
+  namespace: default
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
